@@ -481,7 +481,67 @@ data.expenses.length
 
 }
 
+function showReport(){
 
+let spent = data.expenses.reduce(
+(total,item) => total + Number(item.amount), 0
+);
+
+let remaining = Number(data.capital) - spent;
+
+let perFeddan = spent / 21;
+
+document.getElementById("reportCapital").innerText =
+money(data.capital);
+
+document.getElementById("reportSpent").innerText =
+money(spent);
+
+document.getElementById("reportRemaining").innerText =
+money(remaining);
+
+document.getElementById("reportCount").innerText =
+data.expenses.length;
+
+document.getElementById("reportPerFeddan").innerText =
+money(perFeddan);
+
+let details = document.getElementById("reportDetails");
+
+details.innerHTML = "";
+
+data.expenses.forEach(function(item){
+
+details.innerHTML += `
+<div style="
+padding:10px;
+margin:8px 0;
+background:#eef6f0;
+border-radius:10px;
+">
+
+<b>${item.category}</b><br>
+
+${item.description || "بدون وصف"}<br>
+
+📅 ${item.date || "-"}<br>
+
+💰 ${money(item.amount)}
+
+</div>
+`;
+
+});
+
+document.getElementById("report").style.display = "block";
+
+}
+
+function closeReport(){
+
+document.getElementById("report").style.display = "none";
+
+}
 render();
 <div id="report" class="card" style="display:none">
 
