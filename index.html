@@ -483,7 +483,41 @@ data.expenses.length
 
 
 render();
+<div id="report" class="card" style="display:none">
 
+<h2>📊 التقرير الكامل</h2>
+
+<p><b>🥭 واحة الطير</b></p>
+
+<p>رأس المال:
+<span id="reportCapital">0</span> ر.ع</p>
+
+<p>إجمالي المصروفات:
+<span id="reportSpent">0</span> ر.ع</p>
+
+<p>المتبقي:
+<span id="reportRemaining">0</span> ر.ع</p>
+
+<p>عدد العمليات:
+<span id="reportCount">0</span></p>
+
+<p>مساحة المزرعة:
+21 فدان</p>
+
+<p>تكلفة الفدان:
+<span id="reportPerFeddan">0</span> ر.ع</p>
+
+<hr>
+
+<h3>📋 تفاصيل العمليات</h3>
+
+<div id="reportDetails"></div>
+
+<button onclick="closeReport()">
+إغلاق التقرير
+</button>
+
+</div>
 </script>
 
 </body>
