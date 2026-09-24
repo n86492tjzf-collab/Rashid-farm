@@ -152,13 +152,14 @@ alert("أدخل مبلغ المصروف");
 return;
 }
 
-data.expenses.push({
+date: new Date().toLocaleDateString("ar-OM"),
 category:category,
 description:description,
 amount:amount,
 date:new Date().toLocaleDateString("ar-OM")
 });
-
+<th>التاريخ</th>
+  <td>${item.date || "-"}</td>
 document.getElementById("description").value="";
 document.getElementById("amount").value="";
 
