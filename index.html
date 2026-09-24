@@ -90,6 +90,7 @@ th,td{padding:9px 4px;border-bottom:1px solid #eee;text-align:right}
 <tr>
 <th>البند</th>
 <th>الوصف</th>
+<th>التاريخ</th>
 <th>المبلغ</th>
 <th></th>
 </tr>
@@ -158,8 +159,7 @@ description:description,
 amount:amount,
 date:new Date().toLocaleDateString("ar-OM")
 });
-<th>التاريخ</th>
-  <td>${item.date || "-"}</td>
+
 document.getElementById("description").value="";
 document.getElementById("amount").value="";
 
@@ -213,6 +213,7 @@ list.innerHTML+=`
 <tr>
 <td>${item.category}</td>
 <td>${item.description || "-"}</td>
+<td>${item.date || "-"}</td>
 <td>${money(item.amount)}</td>
 <td>
 <button class="red"
