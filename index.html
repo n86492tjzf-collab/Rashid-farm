@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>حسابات مزرعتي</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial;background:#f3f6f3;color:#172117}
+header{background:#17633b;color:white;padding:22px;text-align:center;font-size:25px;font-weight:bold}
+main{max-width:650px;margin:auto;padding:15px}
+.card{background:white;border-radius:18px;padding:16px;margin-bottom:15px;box-shadow:0 2px 10px #0001}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.box{background:#eef6f0;border-radius:14px;padding:14px}
+.box small{color:#667}
+.num{font-size:22px;font-weight:bold;margin-top:5px}
+input,select,button{width:100%;padding:13px;margin-top:8px;border-radius:11px;border:1px solid #ccd5cc;font-size:16px}
+button{background:#17633b;color:white;border:0;font-weight:bold}
+.red{background:#b43b3b}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+th,td{padding:9px 4px;border-bottom:1px solid #eee;text-align:right}
+</style>
+</head>
+
+<body>
+
+<header>🌱 حسابات مزرعتي</header>
+
+<main>
+
+<div class="card">
+<h3>💰 رأس المال</h3>
+<input id="capital" type="number" placeholder="مثال: 20000">
+<button onclick="saveCapital()">حفظ رأس المال</button>
+</div>
+
+<div class="card grid">
+<div class="box">
+<small>رأس المال</small>
+<div class="num" id="total">0 ر.ع</div>
+</div>
+
+<div class="box">
+<small>المصروف</small>
+<div class="num" id="spent">0 ر.ع</div>
+</div>
+
+<div class="box">
+<small>المتبقي</small>
+<div class="num" id="remaining">0 ر.ع</div>
+</div>
+
+<div class="box">
+<small>عدد العمليات</small>
+<div class="num" id="count">0</div>
+</div>
+</div>
+
+<div class="card">
+<h3>➕ إضافة مصروف</h3>
+
+<label>نوع المصروف</label>
+<select id="category">
+<option>تجهيز الأرض</option>
+<option>الري والمضخات</option>
+<option>التسوير</option>
+<option>الشتلات</option>
+<option>الكهرباء</option>
+<option>العمال</option>
+<option>الأسمدة والمبيدات</option>
+<option>المعدات</option>
+<option>النقل</option>
+<option>أخرى</option>
+</select>
+
+<label>الوصف</label>
+<input id="description" placeholder="مثال: شراء أنابيب ري">
+
+<label>المبلغ بالريال العماني</label>
+<input id="amount" type="number" step="0.001" placeholder="0.000">
+
+<button onclick="addExpense()">إضافة المصروف</button>
+</div>
+
+<div class="card">
+<h3>📋 سجل المصروفات</h3>
+
+<table>
+<thead>
+<tr>
+<th>البند</th>
+<th>الوصف</th>
+<th>المبلغ</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody id="list"></tbody>
+</table>
+
+<p id="empty">لا توجد مصروفات حتى الآن.</p>
+</div>
+
+<div class="card">
+<button class="red" onclick="clearData()">مسح جميع البيانات</button>
+</div>
+
+</main>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("farmData")) || {
+capital:0,
+expenses:[]
+};
+
+function money(n){
+return Number(n).toLocaleString("ar-OM",{
+minimumFractionDigits:3,
+maximumFractionDigits:3
+})+" ر.ع";
+}
+
+function save(){
+localStorage.setItem("farmData",JSON.stringify(data));
+render();
+}
+
+function saveCapital(){
+
+let value=Number(document.getElementById("capital").value);
+
+if(value<0){
+alert("أدخل مبلغ صحيح");
+return;
+}
+
+data.capital=value;
+save();
+
+alert("تم حفظ رأس المال");
+}
+
+function addExpense(){
+
+let category=document.getElementById("category").value;
+let description=document.getElementById("description").value;
+let amount=Number(document.getElementById("amount").value);
+
+if(!amount || amount<=0){
+alert("أدخل مبلغ المصروف");
+return;
+}
+
+data.expenses.push({
+category:category,
+description:description,
+amount:amount,
+date:new Date().toLocaleDateString("ar-OM")
+});
+
+document.getElementById("description").value="";
+document.getElementById("amount").value="";
+
+save();
+}
+
+function removeExpense(index){
+
+if(confirm("هل تريد حذف هذه العملية؟")){
+data.expenses.splice(index,1);
+save();
+}
+
+}
+
+function clearData(){
+
+if(confirm("سيتم حذف جميع الحسابات. هل أنت متأكد؟")){
+data={
+capital:0,
+expenses:[]
+};
+save();
+}
+
+}
+
+function render(){
+
+document.getElementById("capital").value=data.capital || "";
+
+let spent=data.expenses.reduce(
+(total,item)=>total+Number(item.amount),0
+);
+
+document.getElementById("total").innerText=money(data.capital);
+document.getElementById("spent").innerText=money(spent);
+document.getElementById("remaining").innerText=
+money(Number(data.capital)-spent);
+
+document.getElementById("count").innerText=data.expenses.length;
+
+let list=document.getElementById("list");
+list.innerHTML="";
+
+data.expenses.slice().reverse().forEach((item,index)=>{
+
+let realIndex=data.expenses.length-1-index;
+
+list.innerHTML+=`
+<tr>
+<td>${item.category}</td>
+<td>${item.description || "-"}</td>
+<td>${money(item.amount)}</td>
+<td>
+<button class="red"
+style="padding:7px;margin:0"
+onclick="removeExpense(${realIndex})">
+حذف
+</button>
+</td>
+</tr>
+`;
+
+});
+
+document.getElementById("empty").style.display=
+data.expenses.length ? "none" : "block";
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
