@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>💰 فلوسي</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial;
+background:#f4f6f5;
+color:#18231d;
+}
+
+header{
+background:#17633b;
+color:white;
+padding:22px 15px;
+text-align:center;
+font-size:27px;
+font-weight:bold;
+}
+
+.subtitle{
+font-size:14px;
+margin-top:5px;
+opacity:.9;
+}
+
+main{
+max-width:700px;
+margin:auto;
+padding:15px;
+}
+
+.card{
+background:white;
+border-radius:18px;
+padding:17px;
+margin-bottom:15px;
+box-shadow:0 2px 10px #0001;
+}
+
+h2,h3{
+margin-top:0;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.box{
+background:#eef6f0;
+border-radius:14px;
+padding:14px;
+}
+
+.box small{
+color:#667;
+}
+
+.num{
+font-size:21px;
+font-weight:bold;
+margin-top:6px;
+}
+
+input,select,button{
+width:100%;
+padding:13px;
+margin-top:8px;
+border-radius:11px;
+border:1px solid #ccd5cc;
+font-size:16px;
+}
+
+button{
+background:#17633b;
+color:white;
+border:0;
+font-weight:bold;
+}
+
+.red{
+background:#b43b3b;
+}
+
+.blue{
+background:#315b9b;
+}
+
+.orange{
+background:#a66a00;
+}
+
+.item{
+background:#f1f5f2;
+padding:12px;
+border-radius:12px;
+margin-top:8px;
+}
+
+.item-top{
+display:flex;
+justify-content:space-between;
+font-weight:bold;
+}
+
+.category-row{
+display:flex;
+justify-content:space-between;
+padding:10px 2px;
+border-bottom:1px solid #eee;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:14px;
+}
+
+th,td{
+padding:9px 4px;
+border-bottom:1px solid #eee;
+text-align:right;
+}
+
+.progress{
+height:12px;
+background:#e3e7e4;
+border-radius:20px;
+overflow:hidden;
+margin-top:10px;
+}
+
+.progress-bar{
+height:100%;
+background:#17633b;
+width:0%;
+}
+
+.hidden{
+display:none;
+}
+
+.footer-date{
+margin-top:35px;
+padding-top:15px;
+border-top:1px solid #aaa;
+text-align:center;
+}
+
+@media(max-width:500px){
+
+.grid{
+grid-template-columns:1fr 1fr;
+}
+
+table{
+font-size:12px;
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+💰 فلوسي
+
+<div class="subtitle">
+إدارة أموالك ومصاريفك الشخصية
+</div>
+
+</header>
+
+
+<main>
+
+
+<!-- الدخل -->
+
+<div class="card">
+
+<h3>💵 الدخل الشهري</h3>
+
+<input
+id="income"
+type="number"
+step="0.001"
+placeholder="مثال: 1800">
+
+<button onclick="saveIncome()">
+حفظ الدخل
+</button>
+
+</div>
+
+
+<!-- الملخص -->
+
+<div class="card">
+
+<h3>📊 الملخص</h3>
+
+<div class="grid">
+
+<div class="box">
+
+<small>الدخل</small>
+
+<div
+class="num"
+id="incomeView">
+
+0 ر.ع
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<small>المصروف</small>
+
+<div
+class="num"
+id="spentView">
+
+0 ر.ع
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<small>المتبقي</small>
+
+<div
+class="num"
+id="remainingView">
+
+0 ر.ع
+
+</div>
+
+</div>
+
+
+<div class="box">
+
+<small>عدد المصروفات</small>
+
+<div
+class="num"
+id="countView">
+
+0
+
+</div>
+
+</div>
+
+</div>
+
+
+<p>
+نسبة المصروف من الدخل:
+<b id="percentageView">
+0%
+</b>
+</p>
+
+
+<div class="progress">
+
+<div
+id="progressBar"
+class="progress-bar">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- إضافة مصروف -->
+
+<div class="card">
+
+<h3>➕ إضافة مصروف</h3>
+
+
+<label>الفئة</label>
+
+<select id="category">
+
+<option>🍔 أكل</option>
+<option>🚗 سيارة وبنزين</option>
+<option>🏠 منزل</option>
+<option>🛒 مشتريات</option>
+<option>📱 اتصالات</option>
+<option>✈️ سفر</option>
+<option>💳 أقساط</option>
+<option>🎮 ترفيه</option>
+<option>🧾 فواتير</option>
+<option>📦 أخرى</option>
+
+</select>
+
+
+<label>الوصف</label>
+
+<input
+id="description"
+placeholder="مثال: بنزين">
+
+
+<label>المبلغ</label>
+
+<input
+id="amount"
+type="number"
+step="0.001"
+placeholder="0.000">
+
+
+<button onclick="addExpense()">
+
+إضافة المصروف
+
+</button>
+
+</div>
+
+
+<!-- المصروفات -->
+
+<div class="card">
+
+<h3>📋 مصروفاتي</h3>
+
+<div id="expenseList"></div>
+
+<p id="emptyExpenses">
+لا توجد مصروفات حتى الآن.
+</p>
+
+</div>
+
+
+<!-- الالتزامات -->
+
+<div class="card">
+
+<h3>🏦 الالتزامات والأقساط</h3>
+
+<input
+id="debtName"
+placeholder="اسم الالتزام">
+
+<input
+id="debtBalance"
+type="number"
+step="0.001"
+placeholder="المبلغ المتبقي">
+
+<input
+id="debtPayment"
+type="number"
+step="0.001"
+placeholder="القسط الشهري">
+
+<button onclick="addDebt()">
+
+إضافة الالتزام
+
+</button>
+
+<div id="debtList"></div>
+
+</div>
+
+
+<!-- تحليل الفئات -->
+
+<div class="card">
+
+<h3>📊 المصروفات حسب الفئة</h3>
+
+<div id="categoryReport"></div>
+
+</div>
+
+
+<!-- التقارير -->
+
+<div class="card">
+
+<button onclick="showReport()">
+
+📊 التقرير الكامل
+
+</button>
+
+
+<button
+class="blue"
+onclick="makePDF()">
+
+📄 استخراج التقرير PDF
+
+</button>
+
+</div>
+
+
+<!-- التقرير داخل الموقع -->
+
+<div
+id="report"
+class="card hidden">
+
+<h2>📊 التقرير الكامل</h2>
+
+<p>
+<b>💰 فلوسي</b>
+</p>
+
+<p>
+الدخل:
+<b id="reportIncome">0 ر.ع</b>
+</p>
+
+<p>
+إجمالي المصروفات:
+<b id="reportSpent">0 ر.ع</b>
+</p>
+
+<p>
+المتبقي:
+<b id="reportRemaining">0 ر.ع</b>
+</p>
+
+<p>
+عدد المصروفات:
+<b id="reportCount">0</b>
+</p>
+
+<p>
+نسبة المصروف:
+<b id="reportPercentage">0%</b>
+</p>
+
+<hr>
+
+<h3>
+📊 حسب الفئة
+</h3>
+
+<div id="reportCategories"></div>
+
+<hr>
+
+<h3>
+📋 تفاصيل المصروفات
+</h3>
+
+<div id="reportExpenses"></div>
+
+<button
+class="red"
+onclick="closeReport()">
+
+إغلاق التقرير
+
+</button>
+
+</div>
+
+
+<!-- مسح البيانات -->
+
+<div class="card">
+
+<button
+class="red"
+onclick="clearAll()">
+
+⚠️ مسح جميع البيانات
+
+</button>
+
+</div>
+
+
+</main>
+
+
+<script>
+
+
+/* =====================
+   البيانات
+===================== */
+
+let data;
+
+try{
+
+data =
+JSON.parse(
+localStorage.getItem("myMoneyData")
+);
+
+if(!data){
+throw new Error();
+}
+
+if(!Array.isArray(data.expenses)){
+data.expenses=[];
+}
+
+if(!Array.isArray(data.debts)){
+data.debts=[];
+}
+
+if(typeof data.income !== "number"){
+data.income=
+Number(data.income)||0;
+}
+
+}catch(e){
+
+data={
+income:0,
+expenses:[],
+debts:[]
+};
+
+}
+
+
+/* =====================
+   حفظ
+===================== */
+
+function save(){
+
+localStorage.setItem(
+"myMoneyData",
+JSON.stringify(data)
+);
+
+render();
+
+}
+
+
+/* =====================
+   المال
+===================== */
+
+function money(value){
+
+return Number(value||0)
+.toLocaleString(
+"ar-OM",
+{
+minimumFractionDigits:3,
+maximumFractionDigits:3
+}
+)
++" ر.ع";
+
+}
+
+
+/* =====================
+   إجمالي المصروف
+===================== */
+
+function getSpent(){
+
+return data.expenses.reduce(
+(sum,item)=>
+sum+Number(item.amount||0),
+0
+);
+
+}
+
+
+/* =====================
+   الدخل
+===================== */
+
+function saveIncome(){
+
+let value=
+parseFloat(
+document.getElementById("income").value
+);
+
+if(isNaN(value)||value<=0){
+
+alert("أدخل الدخل الشهري");
+
+return;
+
+}
+
+data.income=value;
+
+save();
+
+alert("تم حفظ الدخل");
+
+}
+
+
+/* =====================
+   إضافة مصروف
+===================== */
+
+function addExpense(){
+
+let category=
+document.getElementById("category").value;
+
+let description=
+document
+.getElementById("description")
+.value
+.trim();
+
+let amount=
+parseFloat(
+document.getElementById("amount").value
+);
+
+if(isNaN(amount)||amount<=0){
+
+alert("أدخل مبلغ المصروف");
+
+return;
+
+}
+
+
+data.expenses.push({
+
+category:category,
+
+description:
+description||"بدون وصف",
+
+amount:amount,
+
+date:
+new Date()
+.toLocaleDateString("ar-OM")
+
+});
+
+
+document.getElementById(
+"description"
+).value="";
+
+document.getElementById(
+"amount"
+).value="";
+
+
+save();
+
+}
+
+
+/* =====================
+   حذف مصروف
+===================== */
+
+function deleteExpense(index){
+
+if(confirm("حذف هذا المصروف؟")){
+
+data.expenses.splice(
+index,
+1
+);
+
+save();
+
+}
+
+}
+
+
+/* =====================
+   إضافة التزام
+===================== */
+
+function addDebt(){
+
+let name=
+document
+.getElementById("debtName")
+.value
+.trim();
+
+let balance=
+parseFloat(
+document
+.getElementById("debtBalance")
+.value
+);
+
+let payment=
+parseFloat(
+document
+.getElementById("debtPayment")
+.value
+);
+
+
+if(!name){
+
+alert("اكتب اسم الالتزام");
+
+return;
+
+}
+
+if(isNaN(balance)||balance<0){
+
+alert("أدخل المبلغ المتبقي");
+
+return;
+
+}
+
+if(isNaN(payment)||payment<=0){
+
+alert("أدخل القسط الشهري");
+
+return;
+
+}
+
+
+data.debts.push({
+
+name:name,
+
+balance:balance,
+
+payment:payment
+
+});
+
+
+document.getElementById(
+"debtName"
+).value="";
+
+document.getElementById(
+"debtBalance"
+).value="";
+
+document.getElementById(
+"debtPayment"
+).value="";
+
+
+save();
+
+}
+
+
+/* =====================
+   حذف التزام
+===================== */
+
+function deleteDebt(index){
+
+if(confirm("حذف هذا الالتزام؟")){
+
+data.debts.splice(
+index,
+1
+);
+
+save();
+
+}
+
+}
+
+
+/* =====================
+   التقرير
+===================== */
+
+function buildCategories(){
+
+let categories={};
+
+data.expenses.forEach(
+function(item){
+
+if(!categories[item.category]){
+categories[item.category]=0;
+}
+
+categories[item.category]
++=Number(item.amount||0);
+
+});
+
+return categories;
+
+}
+
+
+/* =====================
+   عرض التقرير
+===================== */
+
+function showReport(){
+
+let spent=getSpent();
+
+let remaining=
+data.income-spent;
+
+let percentage=
+data.income>0
+?
+(spent/data.income)*100
+:
+0;
+
+
+document.getElementById(
+"reportIncome"
+).innerText=
+money(data.income);
+
+document.getElementById(
+"reportSpent"
+).innerText=
+money(spent);
+
+document.getElementById(
+"reportRemaining"
+).innerText=
+money(remaining);
+
+document.getElementById(
+"reportCount"
+).innerText=
+data.expenses.length;
+
+document.getElementById(
+"reportPercentage"
+).innerText=
+percentage.toFixed(1)+"%";
+
+
+let categories=
+buildCategories();
+
+let html="";
+
+
+Object.keys(categories)
+.forEach(
+function(category){
+
+html+=`
+
+<div class="category-row">
+
+<span>${category}</span>
+
+<b>
+${money(categories[category])}
+</b>
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById(
+"reportCategories"
+).innerHTML=
+html||"لا توجد مصروفات";
+
+
+let expensesHTML="";
+
+
+data.expenses
+.slice()
+.reverse()
+.forEach(
+function(item){
+
+expensesHTML+=`
+
+<div class="item">
+
+<b>${item.category}</b>
+
+<br>
+
+📝 ${item.description}
+
+<br>
+
+📅 ${item.date}
+
+<br>
+
+💰 ${money(item.amount)}
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById(
+"reportExpenses"
+).innerHTML=
+expensesHTML||"لا توجد مصروفات";
+
+
+document.getElementById(
+"report"
+).classList
+.remove("hidden");
+
+
+document.getElementById(
+"report"
+).scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+/* =====================
+   إغلاق التقرير
+===================== */
+
+function closeReport(){
+
+document.getElementById(
+"report"
+).classList
+.add("hidden");
+
+}
+
+
+/* =====================
+   PDF
+===================== */
+
+function makePDF(){
+
+let spent=getSpent();
+
+let remaining=
+data.income-spent;
+
+let percentage=
+data.income>0
+?
+(spent/data.income)*100
+:
+0;
+
+let categories=
+buildCategories();
+
+
+let categoryHTML="";
+
+
+Object.keys(categories)
+.forEach(
+function(category){
+
+categoryHTML+=`
+
+<tr>
+
+<td>${category}</td>
+
+<td>
+${money(categories[category])}
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+let expensesHTML="";
+
+
+data.expenses
+.slice()
+.reverse()
+.forEach(
+function(item,index){
+
+expensesHTML+=`
+
+<tr>
+
+<td>${index+1}</td>
+
+<td>${item.category}</td>
+
+<td>${item.description}</td>
+
+<td>${item.date}</td>
+
+<td>${money(item.amount)}</td>
+
+</tr>
+
+`;
+
+});
+
+
+let debtsHTML="";
+
+
+data.debts
+.forEach(
+function(debt){
+
+debtsHTML+=`
+
+<tr>
+
+<td>${debt.name}</td>
+
+<td>${money(debt.balance)}</td>
+
+<td>${money(debt.payment)}</td>
+
+</tr>
+
+`;
+
+});
+
+
+let date=
+new Date()
+.toLocaleDateString(
+"ar-OM",
+{
+year:"numeric",
+month:"2-digit",
+day:"2-digit"
+}
+);
+
+
+let win=
+window.open(
+"",
+"_blank"
+);
+
+
+if(!win){
+
+alert(
+"اسمح بالنوافذ المنبثقة في Safari ثم حاول مرة أخرى."
+);
+
+return;
+
+}
+
+
+win.document.write(`
+
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>تقرير فلوسي</title>
+
+<style>
+
+@page{
+size:A4;
+margin:15mm;
+}
+
+body{
+
+font-family:
+Arial,
+sans-serif;
+
+color:#222;
+
+margin:0;
+
+}
+
+.header{
+
+text-align:center;
+
+border-bottom:
+3px solid #17633b;
+
+padding-bottom:15px;
+
+margin-bottom:20px;
+
+}
+
+.header h1{
+
+color:#17633b;
+
+margin:0;
+
+font-size:28px;
+
+}
+
+.summary{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:10px;
+
+}
+
+.box{
+
+border:
+1px solid #ddd;
+
+border-radius:8px;
+
+padding:12px;
+
+}
+
+.title{
+
+font-size:13px;
+
+color:#666;
+
+}
+
+.value{
+
+font-size:19px;
+
+font-weight:bold;
+
+margin-top:5px;
+
+}
+
+h2{
+
+color:#17633b;
+
+border-bottom:
+1px solid #ddd;
+
+padding-bottom:7px;
+
+margin-top:25px;
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+margin-top:10px;
+
+font-size:13px;
+
+}
+
+th{
+
+background:#17633b;
+
+color:white;
+
+padding:8px;
+
+}
+
+td{
+
+border-bottom:
+1px solid #ddd;
+
+padding:8px;
+
+}
+
+.footer{
+
+margin-top:40px;
+
+padding-top:15px;
+
+border-top:
+1px solid #aaa;
+
+text-align:center;
+
+}
+
+.print{
+
+text-align:center;
+
+margin:25px;
+
+}
+
+.print button{
+
+background:#17633b;
+
+color:white;
+
+border:0;
+
+padding:12px 25px;
+
+border-radius:8px;
+
+font-size:16px;
+
+}
+
+@media print{
+
+.print{
+display:none;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+<h1>💰 فلوسي</h1>
+
+<p>
+التقرير المالي الشخصي
+</p>
+
+</div>
+
+
+<div class="summary">
+
+
+<div class="box">
+
+<div class="title">
+الدخل الشهري
+</div>
+
+<div class="value">
+${money(data.income)}
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="title">
+إجمالي المصروفات
+</div>
+
+<div class="value">
+${money(spent)}
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="title">
+المتبقي
+</div>
+
+<div class="value">
+${money(remaining)}
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="title">
+نسبة المصروف
+</div>
+
+<div class="value">
+${percentage.toFixed(1)}%
+</div>
+
+</div>
+
+
+</div>
+
+
+<h2>
+📊 المصروفات حسب الفئة
+</h2>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>الفئة</th>
+
+<th>الإجمالي</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${categoryHTML||`
+
+<tr>
+
+<td colspan="2">
+لا توجد مصروفات
+</td>
+
+</tr>
+
+`}
+
+</tbody>
+
+</table>
+
+
+<h2>
+📋 تفاصيل المصروفات
+</h2>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>#</th>
+
+<th>الفئة</th>
+
+<th>الوصف</th>
+
+<th>التاريخ</th>
+
+<th>المبلغ</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${expensesHTML||`
+
+<tr>
+
+<td colspan="5">
+لا توجد مصروفات
+</td>
+
+</tr>
+
+`}
+
+</tbody>
+
+</table>
+
+
+<h2>
+🏦 الالتزامات والأقساط
+</h2>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>الالتزام</th>
+
+<th>المتبقي</th>
+
+<th>القسط</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${debtsHTML||`
+
+<tr>
+
+<td colspan="3">
+لا توجد التزامات
+</td>
+
+</tr>
+
+`}
+
+</tbody>
+
+</table>
+
+
+<div class="footer">
+
+<p>
+📅 تاريخ إصدار التقرير:
+<b>${date}</b>
+</p>
+
+<p>
+💰 فلوسي
+</p>
+
+</div>
+
+
+<div class="print">
+
+<button onclick="window.print()">
+
+🖨️ طباعة / حفظ PDF
+
+</button>
+
+</div>
+
+
+</body>
+
+</html>
+
+`);
+
+
+win.document.close();
+
+}
+
+
+/* =====================
+   تحديث الصفحة
+===================== */
+
+function render(){
+
+let spent=getSpent();
+
+let remaining=
+data.income-spent;
+
+let percentage=
+data.income>0
+?
+(spent/data.income)*100
+:
+0;
+
+
+document.getElementById(
+"income"
+).value=
+data.income||"";
+
+
+document.getElementById(
+"incomeView"
+).innerText=
+money(data.income);
+
+
+document.getElementById(
+"spentView"
+).innerText=
+money(spent);
+
+
+document.getElementById(
+"remainingView"
+).innerText=
+money(remaining);
+
+
+document.getElementById(
+"countView"
+).innerText=
+data.expenses.length;
+
+
+document.getElementById(
+"percentageView"
+).innerText=
+percentage.toFixed(1)+"%";
+
+
+document.getElementById(
+"progressBar"
+).style.width=
+Math.min(
+percentage,
+100
+)+"%";
+
+
+/* المصروفات */
+
+let list=
+document.getElementById(
+"expenseList"
+);
+
+list.innerHTML="";
+
+
+data.expenses
+.slice()
+.reverse()
+.forEach(
+function(item,index){
+
+let realIndex=
+data.expenses.length-1-index;
+
+list.innerHTML+=`
+
+<div class="item">
+
+<div class="item-top">
+
+<span>
+${item.category}
+</span>
+
+<span>
+${money(item.amount)}
+</span>
+
+</div>
+
+<div>
+📝 ${item.description}
+</div>
+
+<div>
+📅 ${item.date}
+</div>
+
+<button
+class="red"
+style="padding:8px"
+onclick="deleteExpense(${realIndex})">
+
+حذف
+
+</button>
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById(
+"emptyExpenses"
+).style.display=
+data.expenses.length
+?
+"none"
+:
+"block";
+
+
+/* الالتزامات */
+
+let debts=
+document.getElementById(
+"debtList"
+);
+
+debts.innerHTML="";
+
+
+data.debts.forEach(
+function(debt,index){
+
+debts.innerHTML+=`
+
+<div class="item">
+
+<b>🏦 ${debt.name}</b>
+
+<br>
+
+المتبقي:
+${money(debt.balance)}
+
+<br>
+
+القسط:
+${money(debt.payment)}
+
+<button
+class="red"
+style="padding:8px"
+onclick="deleteDebt(${index})">
+
+حذف
+
+</button>
+
+</div>
+
+`;
+
+});
+
+
+/* الفئات */
+
+let categories=
+buildCategories();
+
+let categoryReport=
+document.getElementById(
+"categoryReport"
+);
+
+categoryReport.innerHTML="";
+
+
+Object.keys(categories)
+.forEach(
+function(category){
+
+categoryReport.innerHTML+=`
+
+<div class="category-row">
+
+<span>
+${category}
+</span>
+
+<b>
+${money(categories[category])}
+</b>
+
+</div>
+
+`;
+
+});
+
+
+if(!Object.keys(categories).length){
+
+categoryReport.innerHTML=
+"لا توجد مصروفات حتى الآن.";
+
+}
+
+}
+
+
+/* تشغيل البرنامج */
+
+render();
+
+</script>
+
+</body>
+
+</html>
