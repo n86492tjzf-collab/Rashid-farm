@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>واحة الطير</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+box-sizing:border-box;
+}
 
 body{
 margin:0;
@@ -50,7 +54,9 @@ border-radius:14px;
 padding:14px;
 }
 
-.box small{color:#667}
+.box small{
+color:#667;
+}
 
 .num{
 font-size:22px;
@@ -74,7 +80,13 @@ border:0;
 font-weight:bold;
 }
 
-.red{background:#b43b3b}
+.red{
+background:#b43b3b;
+}
+
+.pdf{
+background:#315b9b;
+}
 
 table{
 width:100%;
@@ -102,16 +114,21 @@ justify-content:space-between;
 padding:10px;
 border-bottom:1px solid #eee;
 }
+
 </style>
+
 </head>
 
 <body>
 
-<header>🥭 واحة الطير</header>
+<header>
+🥭 واحة الطير
+</header>
 
 <main>
 
 <!-- رأس المال -->
+
 <div class="card">
 
 <h3>💰 رأس المال</h3>
@@ -130,6 +147,7 @@ placeholder="مثال: 20000">
 
 
 <!-- الملخص -->
+
 <div class="card grid">
 
 <div class="box">
@@ -156,6 +174,7 @@ placeholder="مثال: 20000">
 
 
 <!-- إضافة مصروف -->
+
 <div class="card">
 
 <h3>➕ إضافة مصروف</h3>
@@ -198,17 +217,27 @@ placeholder="0.000">
 </div>
 
 
-<!-- التقرير -->
+<!-- أزرار التقرير -->
+
 <div class="card">
 
 <button onclick="showReport()">
 📊 التقرير الكامل
 </button>
 
+<button class="pdf" onclick="makePDF()">
+📄 استخراج التقرير PDF
+</button>
+
 </div>
 
 
-<div id="report" class="card" style="display:none">
+<!-- التقرير داخل البرنامج -->
+
+<div
+id="report"
+class="card"
+style="display:none">
 
 <h2>📊 التقرير الكامل</h2>
 
@@ -276,6 +305,7 @@ placeholder="0.000">
 
 
 <!-- سجل المصروفات -->
+
 <div class="card">
 
 <h3>📋 سجل المصروفات</h3>
@@ -283,6 +313,7 @@ placeholder="0.000">
 <table>
 
 <thead>
+
 <tr>
 <th>البند</th>
 <th>الوصف</th>
@@ -290,6 +321,7 @@ placeholder="0.000">
 <th>المبلغ</th>
 <th></th>
 </tr>
+
 </thead>
 
 <tbody id="list"></tbody>
@@ -304,10 +336,15 @@ placeholder="0.000">
 
 
 <!-- مسح البيانات -->
+
 <div class="card">
 
-<button class="red" onclick="clearData()">
+<button
+class="red"
+onclick="clearData()">
+
 مسح جميع البيانات
+
 </button>
 
 </div>
@@ -317,7 +354,10 @@ placeholder="0.000">
 
 <script>
 
-/* تحميل البيانات */
+/* =========================
+   البيانات
+========================= */
+
 let data;
 
 try{
@@ -347,7 +387,10 @@ expenses:[]
 }
 
 
-/* تنسيق المبالغ */
+/* =========================
+   تنسيق المبلغ
+========================= */
+
 function money(n){
 
 return Number(n || 0).toLocaleString(
@@ -361,7 +404,10 @@ maximumFractionDigits:3
 }
 
 
-/* حفظ */
+/* =========================
+   حفظ البيانات
+========================= */
+
 function save(){
 
 localStorage.setItem(
@@ -374,7 +420,10 @@ render();
 }
 
 
-/* حفظ رأس المال */
+/* =========================
+   رأس المال
+========================= */
+
 function saveCapital(){
 
 const input =
@@ -402,7 +451,10 @@ alert("تم حفظ رأس المال بنجاح");
 }
 
 
-/* إضافة مصروف */
+/* =========================
+   إضافة مصروف
+========================= */
+
 function addExpense(){
 
 const category =
@@ -442,10 +494,15 @@ document.getElementById("amount").value="";
 
 save();
 
+alert("تمت إضافة المصروف");
+
 }
 
 
-/* حذف مصروف */
+/* =========================
+   حذف مصروف
+========================= */
+
 function removeExpense(index){
 
 if(confirm("هل تريد حذف هذه العملية؟")){
@@ -459,7 +516,10 @@ save();
 }
 
 
-/* مسح الكل */
+/* =========================
+   مسح جميع البيانات
+========================= */
+
 function clearData(){
 
 if(confirm("سيتم حذف جميع الحسابات. هل أنت متأكد؟")){
@@ -476,49 +536,74 @@ save();
 }
 
 
-/* التقرير */
-function showReport(){
+/* =========================
+   حساب إجمالي المصروف
+========================= */
 
-const spent =
-data.expenses.reduce(
+function getSpent(){
+
+return data.expenses.reduce(
 (sum,item)=>
 sum + Number(item.amount || 0),
 0
 );
 
-const remaining =
+}
+
+
+/* =========================
+   التقرير داخل البرنامج
+========================= */
+
+function showReport(){
+
+const spent=getSpent();
+
+const remaining=
 Number(data.capital)-spent;
 
-const perFeddan =
+const perFeddan=
 spent/21;
 
 let percentage=0;
 
 if(data.capital>0){
 
-percentage =
+percentage=
 (spent/data.capital)*100;
 
 }
 
 
-document.getElementById("reportCapital")
-.innerText=money(data.capital);
+document.getElementById(
+"reportCapital"
+).innerText=
+money(data.capital);
 
-document.getElementById("reportSpent")
-.innerText=money(spent);
+document.getElementById(
+"reportSpent"
+).innerText=
+money(spent);
 
-document.getElementById("reportRemaining")
-.innerText=money(remaining);
+document.getElementById(
+"reportRemaining"
+).innerText=
+money(remaining);
 
-document.getElementById("reportCount")
-.innerText=data.expenses.length;
+document.getElementById(
+"reportCount"
+).innerText=
+data.expenses.length;
 
-document.getElementById("reportPerFeddan")
-.innerText=money(perFeddan);
+document.getElementById(
+"reportPerFeddan"
+).innerText=
+money(perFeddan);
 
-document.getElementById("reportPercentage")
-.innerText=percentage.toFixed(1)+"%";
+document.getElementById(
+"reportPercentage"
+).innerText=
+percentage.toFixed(1)+"%";
 
 
 /* حسب البنود */
@@ -537,8 +622,10 @@ categories[item.category]
 });
 
 
-const categoryReport =
-document.getElementById("categoryReport");
+const categoryReport=
+document.getElementById(
+"categoryReport"
+);
 
 categoryReport.innerHTML="";
 
@@ -546,13 +633,15 @@ categoryReport.innerHTML="";
 Object.keys(categories).forEach(
 function(category){
 
-categoryReport.innerHTML += `
+categoryReport.innerHTML+=`
 
 <div class="category-box">
 
 <span>${category}</span>
 
-<b>${money(categories[category])}</b>
+<b>
+${money(categories[category])}
+</b>
 
 </div>
 
@@ -561,10 +650,12 @@ categoryReport.innerHTML += `
 });
 
 
-/* التفاصيل */
+/* تفاصيل العمليات */
 
-const details =
-document.getElementById("reportDetails");
+const details=
+document.getElementById(
+"reportDetails"
+);
 
 details.innerHTML="";
 
@@ -574,7 +665,7 @@ data.expenses
 .reverse()
 .forEach(function(item){
 
-details.innerHTML += `
+details.innerHTML+=`
 
 <div class="report-item">
 
@@ -610,7 +701,10 @@ behavior:"smooth"
 }
 
 
-/* إغلاق التقرير */
+/* =========================
+   إغلاق التقرير
+========================= */
+
 function closeReport(){
 
 document.getElementById("report")
@@ -619,20 +713,545 @@ document.getElementById("report")
 }
 
 
-/* تحديث الصفحة */
+/* =========================
+   إنشاء تقرير PDF
+========================= */
+
+function makePDF(){
+
+const spent=getSpent();
+
+const remaining=
+Number(data.capital)-spent;
+
+const perFeddan=
+spent/21;
+
+let percentage=0;
+
+if(data.capital>0){
+
+percentage=
+(spent/data.capital)*100;
+
+}
+
+
+/* البنود */
+
+let categories={};
+
+data.expenses.forEach(function(item){
+
+if(!categories[item.category]){
+categories[item.category]=0;
+}
+
+categories[item.category]
++=Number(item.amount || 0);
+
+});
+
+
+let categoryHTML="";
+
+Object.keys(categories).forEach(
+function(category){
+
+categoryHTML+=`
+
+<tr>
+
+<td>${category}</td>
+
+<td>${money(categories[category])}</td>
+
+</tr>
+
+`;
+
+});
+
+
+/* العمليات */
+
+let expensesHTML="";
+
+data.expenses
+.slice()
+.reverse()
+.forEach(function(item,index){
+
+expensesHTML+=`
+
+<tr>
+
+<td>${index+1}</td>
+
+<td>${item.category}</td>
+
+<td>${item.description || "-"}</td>
+
+<td>${item.date || "-"}</td>
+
+<td>${money(item.amount)}</td>
+
+</tr>
+
+`;
+
+});
+
+
+/* تاريخ التقرير */
+
+const reportDate=
+new Date().toLocaleDateString(
+"ar-OM",
+{
+year:"numeric",
+month:"2-digit",
+day:"2-digit"
+}
+);
+
+
+/* فتح التقرير */
+
+const reportWindow=
+window.open(
+"",
+"_blank"
+);
+
+if(!reportWindow){
+
+alert(
+"لم يتم فتح التقرير. اسمح بالنوافذ المنبثقة في Safari."
+);
+
+return;
+
+}
+
+
+reportWindow.document.write(`
+
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>تقرير واحة الطير</title>
+
+<style>
+
+@page{
+size:A4;
+margin:15mm;
+}
+
+body{
+
+font-family:
+Arial,
+"Segoe UI",
+sans-serif;
+
+color:#222;
+
+margin:0;
+
+background:white;
+
+}
+
+.header{
+
+text-align:center;
+
+border-bottom:
+3px solid #17633b;
+
+padding-bottom:15px;
+
+margin-bottom:20px;
+
+}
+
+.header h1{
+
+margin:0;
+
+color:#17633b;
+
+font-size:28px;
+
+}
+
+.header p{
+
+margin:7px 0;
+
+font-size:16px;
+
+}
+
+.summary{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr;
+
+gap:10px;
+
+margin-bottom:20px;
+
+}
+
+.box{
+
+border:
+1px solid #ddd;
+
+border-radius:8px;
+
+padding:12px;
+
+}
+
+.box-title{
+
+font-size:13px;
+
+color:#666;
+
+}
+
+.box-value{
+
+font-size:19px;
+
+font-weight:bold;
+
+margin-top:5px;
+
+}
+
+h2{
+
+color:#17633b;
+
+border-bottom:
+1px solid #ddd;
+
+padding-bottom:7px;
+
+margin-top:25px;
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+margin-top:10px;
+
+font-size:13px;
+
+}
+
+th{
+
+background:#17633b;
+
+color:white;
+
+padding:8px;
+
+}
+
+td{
+
+border-bottom:
+1px solid #ddd;
+
+padding:8px;
+
+}
+
+.footer{
+
+margin-top:40px;
+
+padding-top:15px;
+
+border-top:
+1px solid #aaa;
+
+text-align:center;
+
+font-size:14px;
+
+}
+
+.print-button{
+
+text-align:center;
+
+margin:20px;
+
+}
+
+.print-button button{
+
+background:#17633b;
+
+color:white;
+
+border:0;
+
+padding:12px 25px;
+
+border-radius:8px;
+
+font-size:16px;
+
+}
+
+@media print{
+
+.print-button{
+
+display:none;
+
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+<h1>🥭 واحة الطير</h1>
+
+<p>📊 التقرير المالي للمزرعة</p>
+
+<p>🌴 مساحة المزرعة: 21 فدان</p>
+
+</div>
+
+
+<div class="summary">
+
+<div class="box">
+
+<div class="box-title">
+رأس المال
+</div>
+
+<div class="box-value">
+${money(data.capital)}
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="box-title">
+إجمالي المصروفات
+</div>
+
+<div class="box-value">
+${money(spent)}
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="box-title">
+المتبقي
+</div>
+
+<div class="box-value">
+${money(remaining)}
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="box-title">
+عدد العمليات
+</div>
+
+<div class="box-value">
+${data.expenses.length}
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="box-title">
+تكلفة الفدان
+</div>
+
+<div class="box-value">
+${money(perFeddan)}
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="box-title">
+نسبة المصروف من رأس المال
+</div>
+
+<div class="box-value">
+${percentage.toFixed(1)}%
+</div>
+
+</div>
+
+</div>
+
+
+<h2>📌 المصروفات حسب البند</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>البند</th>
+
+<th>الإجمالي</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${categoryHTML || `
+<tr>
+<td colspan="2">لا توجد مصروفات</td>
+</tr>
+`}
+
+</tbody>
+
+</table>
+
+
+<h2>📋 تفاصيل المصروفات</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>#</th>
+
+<th>البند</th>
+
+<th>الوصف</th>
+
+<th>التاريخ</th>
+
+<th>المبلغ</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${expensesHTML || `
+<tr>
+<td colspan="5">
+لا توجد مصروفات
+</td>
+</tr>
+`}
+
+</tbody>
+
+</table>
+
+
+<div class="footer">
+
+<p>
+📅 تاريخ إصدار التقرير:
+<b>${reportDate}</b>
+</p>
+
+<p>
+🥭 واحة الطير
+</p>
+
+</div>
+
+
+<div class="print-button">
+
+<button onclick="window.print()">
+🖨️ طباعة / حفظ PDF
+</button>
+
+</div>
+
+
+</body>
+
+</html>
+
+`);
+
+
+reportWindow.document.close();
+
+}
+
+
+/* =========================
+   تحديث الشاشة
+========================= */
+
 function render(){
 
 document.getElementById("capital")
-.value =
+.value=
 data.capital || "";
 
 
-const spent =
-data.expenses.reduce(
-(sum,item)=>
-sum + Number(item.amount || 0),
-0
-);
+const spent=getSpent();
 
 
 document.getElementById("total")
@@ -645,14 +1264,16 @@ money(spent);
 
 document.getElementById("remaining")
 .innerText=
-money(data.capital-spent);
+money(
+Number(data.capital)-spent
+);
 
 document.getElementById("count")
 .innerText=
 data.expenses.length;
 
 
-const list =
+const list=
 document.getElementById("list");
 
 list.innerHTML="";
@@ -663,10 +1284,10 @@ data.expenses
 .reverse()
 .forEach(function(item,index){
 
-const realIndex =
+const realIndex=
 data.expenses.length-1-index;
 
-list.innerHTML += `
+list.innerHTML+=`
 
 <tr>
 
@@ -699,7 +1320,7 @@ onclick="removeExpense(${realIndex})">
 
 
 document.getElementById("empty")
-.style.display =
+.style.display=
 data.expenses.length
 ?
 "none"
@@ -709,10 +1330,12 @@ data.expenses.length
 }
 
 
-/* تشغيل البرنامج */
+/* تشغيل */
+
 render();
 
 </script>
 
 </body>
+
 </html>
